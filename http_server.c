@@ -53,7 +53,8 @@ void handle_request(HttpServer* server, httpRequest req, httpResponse* rsp)
     case GET:
         for(int i = 0; i < ENDPOINT_LEN; ++i)
         {
-            if(server->routes[i].method == GET && strcmp(server->routes[i].end_point, req.uri) == 0)
+            if(server->routes[i].method == GET && 
+            strcmp(server->routes[i].end_point, req.uri) == 0)
             {
                 rsp->rsp_body = server->routes[i].http_func();
             }
@@ -63,7 +64,8 @@ void handle_request(HttpServer* server, httpRequest req, httpResponse* rsp)
          /* code */
         for(int i = 0; i < ENDPOINT_LEN; ++i)
         {
-            if(server->routes[i].method == POST && strcmp(server->routes[i].end_point, req.uri) == 0)
+            if(server->routes[i].method == POST && 
+            strcmp(server->routes[i].end_point, req.uri) == 0)
             {
                 rsp->rsp_body = server->routes[i].http_func();
             }
@@ -74,7 +76,6 @@ void handle_request(HttpServer* server, httpRequest req, httpResponse* rsp)
         break;
     }
 }
-
 
 int run_http_server(HttpServer* server){
     int sock_fd, new_sock;
@@ -93,8 +94,7 @@ int run_http_server(HttpServer* server){
         printf("Fail to set up listen\n");
         return -1;
     }
-
-    //char *response = "HTTP/1.1 200 OK\nAccess-Control-Allow-Origin: *\nContent-Type: text/plain\nContent-Length: 12\n\nHello world!";
+    
     char* response = malloc(sizeof(char) * 500);
 
     while(1)
@@ -122,14 +122,13 @@ int run_http_server(HttpServer* server){
 
         //for each uri in endpoint
         //if this uri == uri
-        //trigger the registered function for this uri
         
-
         write(new_sock, response, strlen(response));
-        free(response);
 
         printf(">>>>>>>>>>>>>>>>>>> Response data sent\n");
         close(new_sock);
     }
+
+    free(response);
     return 0;
 }
