@@ -1,0 +1,1 @@
+void load_json(char* file_path, char** json_str);
