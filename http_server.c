@@ -7,7 +7,7 @@ void register_get(HttpServer* server,  char* uri, void (*route_function)())
 
 RouteData init_route_data(){
     RouteData data;
-    data.end_point = NULL;
+    data.end_point = "None";
     data.http_func = NULL;
     data.method = NONE;
     return data;
@@ -28,7 +28,7 @@ void add_route(HttpServer* server, HTTPMethod method, char* end_point_uri, char*
 
     for(int i = 0; i < ENDPOINT_LEN; ++i)
     {
-        if(server->routes[i].end_point == NULL)
+        if(strcmp(server->routes[i].end_point, "None") == 0)
         {
             printf("%d: Is null\n", i);
             server->routes[i].end_point = end_point_uri;
@@ -48,6 +48,31 @@ void add_route(HttpServer* server, HTTPMethod method, char* end_point_uri, char*
 
 void handle_request(HttpServer* server, httpRequest req, httpResponse* rsp)
 {
+    bool match = false;
+    printf("handling request...\n");
+    
+    //check if an endpoint exist, return 404 if not
+    for(int i = 0; i < ENDPOINT_LEN; ++i)
+    {
+        //printf("checking: %s", (char*)server->routes[i].end_point);
+        if(strcmp(server->routes[i].end_point, req.uri) != 0)
+        {
+            printf("%s\n", server->routes[i].end_point);
+            continue;
+        }
+        else
+        {
+            match = true;
+            break;
+        }
+    }
+
+    if(match == false)
+    {
+        rsp->status = NOT_FOUND_404;
+        return;
+    }
+
     switch (req.method)
     {
     case GET:
@@ -114,7 +139,6 @@ int run_http_server(HttpServer* server){
         outgoing.status = OK_200;
 
         parse_http_request(&incomming, buffer);
-
         handle_request(server, incomming, &outgoing);
         construct_http_response(&outgoing, response);
 

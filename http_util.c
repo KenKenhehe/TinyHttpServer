@@ -60,7 +60,7 @@ char* get_status_code(StatusCode code)
         return "404 Not Found\n";
         break;
     case NOT_IMPLEMENTED_501:
-        return "501 NotImplemented\n";
+        return "501 Not Implemented\n";
         break;
 
     default:
@@ -72,12 +72,11 @@ char* get_status_code(StatusCode code)
 void construct_http_response(httpResponse* response, char* response_data)
 {
     //Default response
-    char* constructed_rsp = "";
     char* protocol_version = "HTTP/1.1 ";
     char* content_type = "Content-Type: text/plain \n";
     char* content_length_prop_str = "Content-Length: ";
     char* cors = "Access-Control-Allow-Origin: *\n";
-    StatusCode rsp_status = NOT_FOUND_404; 
+    StatusCode rsp_status = response->status; 
 
     int content_length = strlen(response->rsp_body);
     char content_length_str[5];
@@ -104,7 +103,7 @@ void construct_http_response(httpResponse* response, char* response_data)
     // printf("body: %s\n", response->rsp_body);
     
     strcat(response_data_buffer, response->rsp_body);
-    printf("data raw: %s", response_data_buffer);
+    printf("Response buffer:\n%s", response_data_buffer);
     
     strcpy(response_data, response_data_buffer);
 
