@@ -19,7 +19,6 @@ char* about(){
 }
 
 char* get(){
-    printf("Got GET request with heroes\n");
     return "Got data\n";
 }
 

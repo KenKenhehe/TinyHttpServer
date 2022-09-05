@@ -13,6 +13,14 @@ void parse_http_start_line(struct httpRequest* request, char* line)
     {
         request->method = POST;
     }
+    else if(strcmp((const char*)token, "PUT") == 0)
+    {
+        request->method = PUT;
+    }
+    else if(strcmp((const char*)token, "DELETE") == 0)
+    {
+        request->method = DELETE;
+    }
     while (token != NULL)
     {
         printf("%d: %s\n",token_idx, token);

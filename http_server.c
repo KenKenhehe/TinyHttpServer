@@ -48,6 +48,9 @@ void add_route(HttpServer* server, HTTPMethod method, char* end_point_uri, char*
 
 void handle_request(HttpServer* server, httpRequest req, httpResponse* rsp)
 {
+    //for each uri in endpoint
+    //if this uri == uri
+
     bool match = false;
     printf("handling request...\n");
     
@@ -73,32 +76,13 @@ void handle_request(HttpServer* server, httpRequest req, httpResponse* rsp)
         return;
     }
 
-    switch (req.method)
+    for(int i = 0; i < ENDPOINT_LEN; ++i)
     {
-    case GET:
-        for(int i = 0; i < ENDPOINT_LEN; ++i)
+        if(server->routes[i].method == req.method && 
+        strcmp(server->routes[i].end_point, req.uri) == 0)
         {
-            if(server->routes[i].method == GET && 
-            strcmp(server->routes[i].end_point, req.uri) == 0)
-            {
-                rsp->rsp_body = server->routes[i].http_func();
-            }
+            rsp->rsp_body = server->routes[i].http_func();
         }
-        break;
-    case POST:
-         /* code */
-        for(int i = 0; i < ENDPOINT_LEN; ++i)
-        {
-            if(server->routes[i].method == POST && 
-            strcmp(server->routes[i].end_point, req.uri) == 0)
-            {
-                rsp->rsp_body = server->routes[i].http_func();
-            }
-        }
-        break;
-
-    default:
-        break;
     }
 }
 
@@ -142,10 +126,6 @@ int run_http_server(HttpServer* server){
         handle_request(server, incomming, &outgoing);
         construct_http_response(&outgoing, response);
 
-        //printf("Got request, Method: %d, uri: %s, http version: %s\n", incomming.method, incomming.uri, incomming.http_version);
-
-        //for each uri in endpoint
-        //if this uri == uri
         
         write(new_sock, response, strlen(response));
 
